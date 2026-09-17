@@ -1,0 +1,14 @@
+node_modules/
+dist/
+local/
+**/bin/
+**/obj/
+com.adamperri.soundclouddial.sdPlugin/native/
+com.adamperri.soundclouddial.sdPlugin/logs/
+com.adamperri.soundclouddial.sdPlugin/LICENSE
+com.adamperri.soundclouddial.sdPlugin/README.md
+com.adamperri.soundclouddial.sdPlugin/PRIVACY.md
+com.adamperri.soundclouddial.sdPlugin/THIRD_PARTY_NOTICES.txt
+com.adamperri.soundclouddial.sdPlugin/package.json
+*.user
+.DS_Store

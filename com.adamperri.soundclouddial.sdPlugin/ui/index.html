@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Cloud Dial</title>
+  <style>
+    :root { color-scheme: dark; font: 13px system-ui, sans-serif; background: #2d2d2d; color: #dedede; }
+    body { margin: 16px; }
+    label { display: grid; grid-template-columns: 110px minmax(0, 1fr); align-items: center; gap: 12px; }
+    select { width: 100%; background: #3c3c3c; color: #fff; border: 1px solid #555; border-radius: 4px; padding: 6px; font: inherit; }
+  </style>
+</head>
+<body>
+  <label for="step">Volume step
+    <select id="step" disabled>
+      <option value="1">1%</option><option value="2" selected>2%</option><option value="3">3%</option><option value="5">5%</option><option value="10">10%</option>
+    </select>
+  </label>
+  <script src="settings.js"></script>
+</body>
+</html>

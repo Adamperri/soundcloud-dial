@@ -1,0 +1,14 @@
+{
+  "$schema": "https://schemas.elgato.com/streamdeck/plugins/layout.json",
+  "id": "cloud-dial-player",
+  "items": [
+    { "key": "base", "type": "pixmap", "rect": [0, 0, 200, 100], "background": "#111214", "zOrder": 0 },
+    { "key": "artwork", "type": "pixmap", "rect": [6, 8, 70, 70], "value": "assets/cover.png", "zOrder": 1 },
+    { "key": "connection", "type": "text", "rect": [84, 5, 110, 14], "font": { "size": 10, "weight": 600 }, "color": "#ff7828", "alignment": "left", "value": "SOUNDCLOUD", "zOrder": 1 },
+    { "key": "track", "type": "text", "rect": [84, 23, 110, 23], "font": { "size": 15, "weight": 600 }, "color": "#ffffff", "alignment": "left", "text-overflow": "ellipsis", "value": "Open SoundCloud", "zOrder": 1 },
+    { "key": "artist", "type": "text", "rect": [84, 47, 110, 19], "font": { "size": 12, "weight": 400 }, "color": "#b9bdc5", "alignment": "left", "text-overflow": "ellipsis", "value": "Desktop app", "zOrder": 1 },
+    { "key": "playback", "type": "pixmap", "rect": [85, 71, 18, 18], "value": "assets/play.png", "zOrder": 1 },
+    { "key": "level", "type": "text", "rect": [110, 68, 84, 24], "font": { "size": 18, "weight": 600 }, "color": "#ffffff", "alignment": "right", "value": "--", "zOrder": 1 },
+    { "key": "meter", "type": "bar", "rect": [6, 94, 188, 4], "value": 0, "subtype": 0, "border_w": 0, "bar_bg_c": "#303238", "bar_fill_c": "#ff6500", "zOrder": 1 }
+  ]
+}
