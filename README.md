@@ -2,7 +2,8 @@
 
 An unofficial Windows Stream Deck dial plugin for the **SoundCloud desktop app**.
 
-- Live cover artwork, track title, artist and playback state on the dial display.
+- Larger live cover artwork, smoothly scrolling long track titles, artist and playback state on the dial display.
+- A song-progress bar between the playback icon and volume percentage, driven by the app's real elapsed time and duration.
 - Turn the dial to change **only SoundCloud's Windows app volume**.
 - Press the dial to play or pause. Touching the display also toggles playback on touch-capable devices.
 - Configurable 1%, 2%, 3%, 5% or 10% volume steps. Default: 2% per tick.
@@ -35,8 +36,9 @@ The Windows helper includes its .NET runtime. Users do not need Node.js or .NET 
 - `--` volume means SoundCloud has not opened an audio session yet. Start playback to activate volume control.
 - Volume is the Windows per-app mixer level, not SoundCloud's in-app player slider. If the in-app slider is zero, turning the dial cannot override it.
 - A positive volume turn also unmutes the SoundCloud Windows session. It never changes master volume, output devices, microphone levels, or other applications.
-- The orange bar shows volume, not track progress. The playback symbol reflects the current playback state.
-- Long titles are ellipsized to fit the display. The plugin does not scroll text across neighboring dials.
+- The bottom orange bar shows volume. The small mint bar between the playback icon and percentage shows song progress, not audio level.
+- Long track titles pause briefly, then scroll in a continuous loop inside their own title area. Short titles stay still. Artist text still ellipsizes when necessary.
+- Timing comes from Windows media metadata when available, otherwise from the SoundCloud app's accessible elapsed/total labels. This is read-only: no clicks, screenshots or screen recording. If the current app view exposes no unambiguous timeline, the progress bar hides instead of inventing a value. SoundCloud UI updates may affect this fallback.
 - The bridge reconnects after SoundCloud or an audio device restarts. Switch away from the profile and back if necessary.
 - The plugin only reads Windows media metadata and changes local playback/volume. It does not download songs or redistribute cover art.
 
@@ -48,6 +50,7 @@ Install Node.js 22+, npm and a current .NET 8+ SDK on Windows, then:
 npm ci
 npm run check
 npm test
+dotnet run --project tests/Native.Tests -c Release
 npm run build
 npm run validate
 npm run pack
@@ -61,11 +64,11 @@ Optional **live integration test** (briefly changes SoundCloud volume and pauses
 node scripts/test-live.mjs --controls
 ```
 
-This drives the real plugin through a local Stream Deck WebSocket test harness, including dial events, rather than calling only a mocked control function. A current cover image may be written to the git-ignored `local/` directory during this opt-in test. Do not publish that directory.
+Use `--display-only` to check scrolling and progress without changing playback or volume. Use a playing track with a long title for these checks. This drives the real plugin through a local Stream Deck WebSocket test harness, rather than calling only a mocked control function. Current cover artwork and display snapshots may be written to the git-ignored `local/` directory during this opt-in test. Do not publish that directory.
 
 ## Architecture
 
-The official Elgato TypeScript SDK handles dial events and feedback. A local C# helper reads `GlobalSystemMediaTransportControlsSessionManager` and uses NAudio/Core Audio for application volume across render endpoints. Both media and audio sessions are restricted to the SoundCloud Store package identity. Communication uses private child-process stdin/stdout; the plugin opens no network listener and calls no cloud service. The test harness alone opens an ephemeral loopback server.
+The official Elgato TypeScript SDK handles dial events and feedback. A local C# helper reads `GlobalSystemMediaTransportControlsSessionManager`, reads the SoundCloud app's accessible timeline labels when necessary, and uses NAudio/Core Audio for application volume across render endpoints. Media, audio and accessible text are restricted to the SoundCloud Store package's processes. Windows shapes title text once per title change; pngjs renders only the small scrolling strip at up to 20 fps. The large artwork is not re-sent on every animation frame. Communication uses private child-process stdin/stdout; the plugin opens no network listener and calls no cloud service. The test harness alone opens an ephemeral loopback server.
 
 ## Distribution
 

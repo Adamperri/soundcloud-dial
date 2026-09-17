@@ -17,6 +17,7 @@ jobs:
       - run: npm ci
       - run: npm run check
       - run: npm test
+      - run: dotnet run --project tests/Native.Tests -c Release
       - run: npm run build
       - run: npm run validate
       - run: npm run pack

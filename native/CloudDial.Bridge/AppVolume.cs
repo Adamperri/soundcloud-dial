@@ -13,7 +13,7 @@ internal sealed class AppVolume
     [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
     private static extern int GetPackageFamilyName(IntPtr process, ref uint length, StringBuilder? name);
 
-    private static HashSet<uint> FindProcesses()
+    internal static HashSet<uint> FindProcesses()
     {
         var ids = new HashSet<uint>();
         foreach (var process in Process.GetProcessesByName("soundcouch"))

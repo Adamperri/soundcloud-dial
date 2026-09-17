@@ -1,6 +1,7 @@
 import streamDeck, { action, SingletonAction, type DialAction, type DialDownEvent, type DialRotateEvent, type TouchTapEvent, type WillAppearEvent, type WillDisappearEvent } from "@elgato/streamdeck";
 import { Bridge } from "./bridge.js";
-import { changedFeedback, feedback, volumeDelta } from "./state.js";
+import { changedFeedback, feedback, volumeDelta, type Feedback } from "./state.js";
+import { Marquee } from "./marquee.js";
 
 type Settings = { volumeStep?: number };
 const bridge = new Bridge();
@@ -8,7 +9,10 @@ const bridge = new Bridge();
 @action({ UUID: "com.adamperri.soundclouddial.control" })
 class SoundCloudDial extends SingletonAction<Settings> {
   private visible = new Map<string, DialAction<Settings>>();
-  private rendered = new Map<string, Record<string, string | number>>();
+  private rendered = new Map<string, Feedback>();
+  private marquee = new Marquee();
+  private animation?: NodeJS.Timeout;
+  private rendering = false;
   private rotations = new Map<string, { delta: number; timer: NodeJS.Timeout; dial: DialAction<Settings> }>();
 
   constructor() {
@@ -21,6 +25,7 @@ class SoundCloudDial extends SingletonAction<Settings> {
     this.visible.set(ev.action.id, ev.action);
     this.rendered.delete(ev.action.id);
     await ev.action.setFeedbackLayout("layouts/player.json");
+    this.animation ??= setInterval(() => void this.render(), 50);
     bridge.start();
     await this.render();
   }
@@ -31,17 +36,29 @@ class SoundCloudDial extends SingletonAction<Settings> {
     const rotation = this.rotations.get(ev.action.id);
     if (rotation) clearTimeout(rotation.timer);
     this.rotations.delete(ev.action.id);
-    if (!this.visible.size) bridge.stop();
+    if (!this.visible.size) {
+      clearInterval(this.animation);
+      this.animation = undefined;
+      this.marquee = new Marquee();
+      bridge.stop();
+    }
   }
 
   private async render() {
-    const next = feedback(bridge.state);
-    for (const [id, dial] of this.visible) {
-      const changes = changedFeedback(next, this.rendered.get(id));
-      if (!Object.keys(changes).length) continue;
-      this.rendered.set(id, next);
-      try { await dial.setFeedback(changes); }
-      catch { this.rendered.delete(id); }
+    if (this.rendering || !this.visible.size) return;
+    this.rendering = true;
+    try {
+      const next = feedback(bridge.state);
+      next.track = this.marquee.frame(bridge.state.titleRaster, performance.now());
+      for (const [id, dial] of this.visible) {
+        const changes = changedFeedback(next, this.rendered.get(id));
+        if (!Object.keys(changes).length) continue;
+        this.rendered.set(id, next);
+        try { await dial.setFeedback(changes); }
+        catch { this.rendered.delete(id); }
+      }
+    } finally {
+      this.rendering = false;
     }
   }
 

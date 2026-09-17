@@ -14,10 +14,10 @@ await copyFile("LICENSE", `${plugin}/LICENSE`);
 await copyFile("PRIVACY.md", `${plugin}/PRIVACY.md`);
 await copyFile("README.md", `${plugin}/README.md`);
 let notices = await readFile("THIRD_PARTY_NOTICES.md", "utf8");
-for (const name of ["@elgato/streamdeck", "@elgato/utils", "@elgato/schemas", "ws", "lucide-static"]) {
+for (const name of ["@elgato/streamdeck", "@elgato/utils", "@elgato/schemas", "ws", "lucide-static", "pngjs"]) {
   notices += `\n\n## ${name}\n\n` + await readFile(`node_modules/${name}/LICENSE`, "utf8");
 }
-for (const name of ["NAudio", "dotnet", "dotnet-third-party"]) notices += `\n\n## ${name}\n\n` + await readFile(`licenses/${name}.txt`, "utf8");
+for (const name of ["NAudio", "dotnet", "dotnet-third-party", "UIAutomation-Interop"]) notices += `\n\n## ${name}\n\n` + await readFile(`licenses/${name}.txt`, "utf8");
 await writeFile(`${plugin}/THIRD_PARTY_NOTICES.txt`, notices);
 
 for (const [name, icon, size, color, background] of [
@@ -36,5 +36,7 @@ for (const [name, icon, size, color, background] of [
     await png.png().toFile(`${plugin}/assets/${name}${scale === 2 ? "@2x" : ""}.png`);
   }
 }
+
+await sharp(Buffer.from('<svg xmlns="http://www.w3.org/2000/svg" width="192" height="48"><rect width="192" height="48" fill="#111214"/><text x="2" y="34" font-family="Segoe UI, sans-serif" font-size="28" font-weight="bold" fill="white">SoundCloud</text></svg>')).png().toFile(`${plugin}/assets/idle-title.png`);
 
 execFileSync("dotnet", ["publish", "native/CloudDial.Bridge", "-c", "Release", "-r", "win-x64", "--self-contained", "true", "-p:PublishSingleFile=true", "-p:IncludeNativeLibrariesForSelfExtract=true", "-p:DebugType=None", "-p:DebugSymbols=false", "-o", resolve(plugin, "native")], { stdio: "inherit", windowsHide: true });

@@ -33,5 +33,12 @@ test("untrusted metadata cannot escape the protocol or supply remote artwork", (
   for (const bad of [{ ...offline, volume: 101 }, { ...offline, volume: 2.1 }, { ...offline, artwork: "https://example.com/art.png" }, null]) {
     assert.throws(() => parseState(bad));
   }
-  assert.equal(feedback({ ...offline, title: "a\nb" }).track, "a b");
+  assert.equal(feedback({ ...offline, artist: "a\nb" }).artist, "a b");
+});
+
+test("song progress is real, bounded, and hidden when timing is absent", () => {
+  assert.deepEqual(feedback(offline).progress, { value: 0, enabled: false });
+  assert.deepEqual(feedback({ ...offline, connected: true, positionSeconds: 60, durationSeconds: 240 }).progress, { value: 25, enabled: true });
+  assert.deepEqual(feedback({ ...offline, connected: true, positionSeconds: 300, durationSeconds: 240 }).progress, { value: 100, enabled: true });
+  assert.throws(() => parseState({ ...offline, durationSeconds: -1 }));
 });

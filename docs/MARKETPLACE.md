@@ -17,7 +17,8 @@ Status: not submitted. Direct downloads are available through GitHub Releases.
 Description:
 
 See the current SoundCloud track on your Stream Deck dial display. Cloud Dial
-shows live cover artwork, the track title, artist and playback state. Turn the
+shows large live cover artwork, a scrolling track title, artist, playback state
+and real song progress. Turn the
 dial to change SoundCloud's Windows application volume and press to play or
 pause. No API key or browser extension is required. Requires the SoundCloud
 Microsoft Store desktop app and a dial-capable Stream Deck device. Windows x64
@@ -27,6 +28,8 @@ not affiliated with or endorsed by SoundCloud, Elgato or Corsair.
 Initial release notes:
 
 - Live artwork, track and artist display.
+- Smooth wrapping title scroll and larger artwork.
+- Real elapsed/total-time progress, with read-only accessibility fallback for the SoundCloud Windows app.
 - Per-application volume with configurable steps.
 - Dial-press and touch play/pause.
 - Local Windows integration with reconnect handling and no cloud credentials.

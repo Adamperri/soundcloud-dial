@@ -10,7 +10,7 @@ using var bridge = new MediaBridge();
 if (args.Contains("--probe"))
 {
     var state = await bridge.Snapshot();
-    Console.WriteLine(JsonSerializer.Serialize(state with { Artwork = state.Artwork == null ? null : "available" }, options));
+    Console.WriteLine(JsonSerializer.Serialize(state with { Artwork = state.Artwork == null ? null : "available", TitleRaster = state.TitleRaster == null ? null : "available" }, options));
     return;
 }
 

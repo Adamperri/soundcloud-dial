@@ -6,6 +6,9 @@ The release includes:
 - ws: MIT, Einar Otto Stangvik and contributors.
 - Lucide icons: ISC/MIT, Lucide and Feather contributors. Icons are rendered to PNG during the build.
 - NAudio.Wasapi and NAudio.Core 2.2.1: MIT, Mark Heath and contributors.
+- pngjs: MIT, its contributors.
+- UIAutomation-Interop: MIT, FlaUI contributors.
+- System.Drawing.Common: MIT, Microsoft/.NET contributors.
 - Microsoft .NET runtime and Windows SDK projections: MIT and their included third-party notices.
 
 The build collects full notices into `THIRD_PARTY_NOTICES.txt` inside the plugin.
